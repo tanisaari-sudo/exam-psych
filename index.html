@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Экзамен по социальной и педагогической психологии</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #fdf6ec;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #7a4200;
+            margin-bottom: 4px;
+            font-size: 1.5em;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #a05a00;
+            font-size: 0.95em;
+            margin-bottom: 20px;
+        }
+
+        .main-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .left-panel {
+            width: 280px;
+            flex-shrink: 0;
+        }
+
+        .input-section {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #f0c878;
+            border-radius: 8px;
+            font-size: 15px;
+        }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: #bf6000;
+        }
+
+        .tickets-section {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .tickets-section h3 {
+            color: #7a4200;
+            margin-bottom: 12px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .tickets-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .ticket-btn {
+            aspect-ratio: 1;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            background: linear-gradient(145deg, #e6950a, #bf6000);
+            color: white;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+            min-height: 58px;
+        }
+
+        .ticket-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+            background: linear-gradient(145deg, #f0a828, #d47010);
+        }
+
+        .ticket-btn.taken {
+            background: linear-gradient(145deg, #bdbdbd, #9e9e9e);
+            cursor: not-allowed;
+        }
+
+        .ticket-btn.taken:hover {
+            transform: none;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+        }
+
+        .right-panel {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .sessions-container {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-height: 400px;
+        }
+
+        .sessions-container h3 {
+            color: #7a4200;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .no-sessions {
+            color: #999;
+            text-align: center;
+            padding: 40px;
+            font-style: italic;
+        }
+
+        .session-card {
+            background: #fff8f0;
+            border: 2px solid #f0c878;
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .session-card.sent {
+            background: #f0f4ff;
+            border-color: #90a8ef;
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .session-info {
+            font-weight: bold;
+            color: #7a4200;
+            font-size: 15px;
+        }
+
+        .session-card.sent .session-info {
+            color: #1565c0;
+        }
+
+        .session-ticket {
+            background: #bf6000;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 14px;
+        }
+
+        .session-card.sent .session-ticket {
+            background: #1976d2;
+        }
+
+        .session-questions {
+            font-size: 13px;
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .session-questions div {
+            margin-bottom: 5px;
+            padding: 6px;
+            background: white;
+            border-radius: 5px;
+        }
+
+        .question-label {
+            font-weight: bold;
+            color: #bf6000;
+        }
+
+        .session-card.sent .question-label {
+            color: #1565c0;
+        }
+
+        .session-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .session-controls select {
+            padding: 8px;
+            border: 2px solid #f0c878;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn {
+            padding: 9px 18px;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-send {
+            background: #bf6000;
+            color: white;
+        }
+
+        .btn-send:hover {
+            background: #9a4e00;
+        }
+
+        .btn-send:disabled {
+            background: #e0b070;
+            cursor: not-allowed;
+        }
+
+        .btn-return {
+            background: #e07820;
+            color: white;
+        }
+
+        .btn-return:hover {
+            background: #c06010;
+        }
+
+        .session-status {
+            font-size: 12px;
+            padding: 5px 10px;
+            border-radius: 5px;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .session-status.success {
+            background: #fff3cd;
+            color: #7a4200;
+        }
+
+        .session-status.error {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+
+        .session-status.sending {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+
+        .sent-badge {
+            background: #1976d2;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            margin-left: 8px;
+        }
+
+        .grade-display {
+            background: #ffe0b2;
+            color: #7a4200;
+            padding: 4px 12px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+
+            .main-container {
+                flex-direction: column;
+            }
+
+            .left-panel {
+                width: 100%;
+            }
+
+            .tickets-grid {
+                grid-template-columns: repeat(5, 1fr);
+            }
+
+            h1 { font-size: 1.2em; }
+        }
+    </style>
+</head>
+<body>
+    <h1>Экзаменационные билеты</h1>
+    <div class="subtitle">Социальная и педагогическая психология &nbsp;·&nbsp; 2025–2026</div>
+
+    <div class="main-container">
+        <div class="left-panel">
+            <div class="input-section">
+                <div class="input-group">
+                    <label>Фамилия студента:</label>
+                    <input type="text" id="surname" placeholder="Введите фамилию">
+                </div>
+            </div>
+
+            <div class="tickets-section">
+                <h3>🎫 Билеты</h3>
+                <div class="tickets-grid" id="ticketsGrid"></div>
+            </div>
+        </div>
+
+        <div class="right-panel">
+            <div class="sessions-container">
+                <h3>👨‍🎓 Студенты на экзамене</h3>
+                <div id="sessionsList">
+                    <div class="no-sessions">Пока нет активных сессий</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const SHEET_URL = "PLACEHOLDER";  // сюда вставить ссылку из Apps Script после настройки
+
+        const questions1 = [
+            "Феномен двойственного статуса социальной психологии: «пограничная» наука",
+            "История становления дисциплины: от «психологии народов» к эксперименту",
+            "Объект и предмет социальной психологии: дискуссионные аспекты",
+            "Методология исследования: проблема валидности и этики",
+            "Система категорий социальной психологии",
+            "Понятие малой группы: критерии выделения и проблема дефиниции",
+            "Классификация малых групп",
+            "Структура малой группы",
+            "Групповая динамика: лидерство, нормообразование и конформность",
+            "Групповая сплоченность",
+            "Большая группа как социально-психологическая реальность: специфика и проблема изучения",
+            "Классификация больших групп: устойчивые и стихийные",
+            "Психология стихийных групп: толпа, публика, масса",
+            "Психология устойчивых больших групп: класс, этнос, гендер",
+            "Механизмы влияния большой группы на личность: социальная идентичность, стереотипы, предрассудки"
+        ];
+
+        const questions2 = [
+            "Предмет и место педагогической психологии",
+            "Центральная проблема: соотношение обучения и развития",
+            "Учебная деятельность: структура и специфика",
+            "Теория поэтапного формирования умственных действий",
+            "Учебная мотивация",
+            "Педагогическая деятельность как особый вид деятельности",
+            "Педагогические способности и педагогическая направленность",
+            "Педагогическое общение",
+            "Педагогическое взаимодействие и его типы",
+            "Профессиональные деформации и эмоциональное выгорание",
+            "Социометрия как метод изучения структуры группы",
+            "Психологическая структура устойчивой большой группы по Андреевой: психический склад и психологический настрой",
+            "Конформность: виды, факторы, педагогические последствия",
+            "Стили педагогического общения в педагогической практике",
+            "Личностно-ориентированное обучение: принципы и педагогические следствия"
+        ];
+
+        function shuffle(array) {
+            const result = [...array];
+            for (let i = result.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [result[i], result[j]] = [result[j], result[i]];
+            }
+            return result;
+        }
+
+        // Разбивка на билеты фиксируется при первом запуске и хранится до сброса
+        let tickets = JSON.parse(localStorage.getItem('ticketPairing_psych'));
+        if (!tickets) {
+            const shuffled2 = shuffle(questions2);
+            tickets = questions1.map((q1, i) => ({
+                id: i + 1,
+                question1: q1,
+                question2: shuffled2[i]
+            }));
+            localStorage.setItem('ticketPairing_psych', JSON.stringify(tickets));
+        }
+
+        let takenTickets = JSON.parse(localStorage.getItem('takenTickets_psych')) || [];
+        let sessions = JSON.parse(localStorage.getItem('sessions_psych')) || [];
+        let shuffledAvailable = [];
+
+        function reshuffleAvailable() {
+            const available = tickets.filter(t => !takenTickets.includes(t.id));
+            shuffledAvailable = shuffle(available);
+        }
+
+        function renderTickets() {
+            const grid = document.getElementById('ticketsGrid');
+            grid.innerHTML = '';
+            const takenCount = takenTickets.length;
+            let availableIndex = 0;
+
+            for (let i = 0; i < 15; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'ticket-btn';
+
+                if (i < takenCount) {
+                    btn.classList.add('taken');
+                    btn.onclick = () => alert('Этот билет уже взят!');
+                } else {
+                    if (availableIndex < shuffledAvailable.length) {
+                        const ticket = shuffledAvailable[availableIndex];
+                        btn.onclick = () => selectTicket(ticket.id);
+                        availableIndex++;
+                    }
+                }
+
+                grid.appendChild(btn);
+            }
+        }
+
+        function selectTicket(id) {
+            const surname = document.getElementById('surname').value.trim();
+            if (!surname) {
+                alert('Введите фамилию студента!');
+                return;
+            }
+            if (takenTickets.includes(id)) {
+                alert('Этот билет уже взят!');
+                return;
+            }
+
+            const ticket = tickets.find(t => t.id === id);
+            const session = {
+                id: Date.now(),
+                surname,
+                ticketId: ticket.id,
+                question1: ticket.question1,
+                question2: ticket.question2,
+                grade: '',
+                sent: false
+            };
+
+            sessions.push(session);
+            takenTickets.push(id);
+
+            localStorage.setItem('sessions_psych', JSON.stringify(sessions));
+            localStorage.setItem('takenTickets_psych', JSON.stringify(takenTickets));
+
+            document.getElementById('surname').value = '';
+            reshuffleAvailable();
+            renderTickets();
+            renderSessions();
+        }
+
+        function renderSessions() {
+            const list = document.getElementById('sessionsList');
+
+            if (sessions.length === 0) {
+                list.innerHTML = '<div class="no-sessions">Пока нет активных сессий</div>';
+                return;
+            }
+
+            list.innerHTML = sessions.map(session => {
+                const sentBadge = session.sent ? '<span class="sent-badge">✓ Отправлено</span>' : '';
+                const cardClass = session.sent ? 'session-card sent' : 'session-card';
+
+                const gradeHtml = session.sent
+                    ? `<span class="grade-display">Оценка: ${session.grade}</span>`
+                    : `<select id="grade-${session.id}">
+                            <option value="">Оценка</option>
+                            <option value="5">5</option>
+                            <option value="4">4</option>
+                            <option value="3">3</option>
+                            <option value="2">2</option>
+                            <option value="неявка">Неявка</option>
+                       </select>`;
+
+                const sendBtn = session.sent
+                    ? ''
+                    : `<button class="btn btn-send" id="btn-send-${session.id}" onclick="sendSession(${session.id})">📤 Отправить</button>`;
+
+                return `
+                    <div class="${cardClass}" id="session-${session.id}">
+                        <div class="session-header">
+                            <span class="session-info">${session.surname}${sentBadge}</span>
+                            <span class="session-ticket">Билет ${session.ticketId}</span>
+                        </div>
+                        <div class="session-questions">
+                            <div><span class="question-label">1.</span> ${session.question1}</div>
+                            <div><span class="question-label">2.</span> ${session.question2}</div>
+                        </div>
+                        <div class="session-controls">
+                            ${gradeHtml}
+                            ${sendBtn}
+                            <button class="btn btn-return" onclick="returnSession(${session.id})">🔄 Вернуть билет</button>
+                        </div>
+                        <div class="session-status" id="status-${session.id}" style="display:none;"></div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        async function sendSession(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            const grade = document.getElementById(`grade-${sessionId}`).value;
+            const statusEl = document.getElementById(`status-${sessionId}`);
+            const sendBtn = document.getElementById(`btn-send-${sessionId}`);
+
+            if (!grade) { alert('Выберите оценку!'); return; }
+
+            session.grade = grade;
+
+            const data = {
+                surname: session.surname,
+                ticketNumber: session.ticketId,
+                question1: session.question1,
+                question2: session.question2,
+                grade
+            };
+
+            try {
+                statusEl.style.display = 'block';
+                statusEl.className = 'session-status sending';
+                statusEl.textContent = '⏳ Отправка...';
+                sendBtn.disabled = true;
+
+                await fetch(SHEET_URL, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                session.sent = true;
+                localStorage.setItem('sessions_psych', JSON.stringify(sessions));
+                renderSessions();
+
+            } catch (error) {
+                statusEl.className = 'session-status error';
+                statusEl.textContent = '❌ Ошибка: ' + error.message;
+                sendBtn.disabled = false;
+            }
+        }
+
+        function returnSession(sessionId) {
+            const session = sessions.find(s => s.id === sessionId);
+            if (session && confirm(`Вернуть билет ${session.ticketId} (${session.surname})?`)) {
+                takenTickets = takenTickets.filter(id => id !== session.ticketId);
+                sessions = sessions.filter(s => s.id !== sessionId);
+
+                localStorage.setItem('sessions_psych', JSON.stringify(sessions));
+                localStorage.setItem('takenTickets_psych', JSON.stringify(takenTickets));
+
+                reshuffleAvailable();
+                renderTickets();
+                renderSessions();
+            }
+        }
+
+        reshuffleAvailable();
+        renderTickets();
+        renderSessions();
+    </script>
+</body>
+</html>
