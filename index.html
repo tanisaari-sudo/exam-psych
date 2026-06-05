@@ -262,6 +262,26 @@
             background: #c06010;
         }
 
+        .btn-new-session {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background: white;
+            color: #c62828;
+            border: 2px solid #ef9a9a;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-top: 15px;
+        }
+
+        .btn-new-session:hover {
+            background: #ffebee;
+            border-color: #c62828;
+        }
+
         .session-status {
             font-size: 12px;
             padding: 5px 10px;
@@ -339,6 +359,8 @@
                 <h3>🎫 Билеты</h3>
                 <div class="tickets-grid" id="ticketsGrid"></div>
             </div>
+
+            <button class="btn-new-session" onclick="newSession()">🔁 Новая сессия</button>
         </div>
 
         <div class="right-panel">
@@ -582,6 +604,14 @@
                 renderTickets();
                 renderSessions();
             }
+        }
+
+        function newSession() {
+            if (!confirm('Начать новую сессию? Все текущие данные будут удалены.')) return;
+            localStorage.removeItem('ticketPairing_psych');
+            localStorage.removeItem('takenTickets_psych');
+            localStorage.removeItem('sessions_psych');
+            location.reload();
         }
 
         reshuffleAvailable();
